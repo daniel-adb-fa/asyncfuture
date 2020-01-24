@@ -966,8 +966,14 @@ static DeferredFuture<DeferredType>* execute(QFuture<T> future, QObject* context
     watch(future,
           contextObject,
           contextObject,[=]() {
-        Value<RetType> value = eval(onCompleted, future);
-        defer->complete(value);
+		try {
+			Value<RetType> value = eval(onCompleted, future);
+			defer->complete(value);
+		} catch(const QException& e) {
+			defer->reportException(e);
+		} catch(...) {
+			defer->reportException(QUnhandledException());
+		}
     }, [=]() {
         onCanceled();
         defer->cancel();
