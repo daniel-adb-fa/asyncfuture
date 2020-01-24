@@ -1278,6 +1278,8 @@ public:
         }
     }
 
+	bool isEmpty() const { return combinedFuture->count == 0; }
+
     template <typename T>
     Combinator& combine(QFuture<T> future) {
         combinedFuture->addFuture(future);
